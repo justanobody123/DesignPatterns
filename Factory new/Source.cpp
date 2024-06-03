@@ -180,4 +180,9 @@ void main()
 	MyGeometry::Rectangle rect(100, 50, 100, 200, MyGeometry::Color::RED, 8);
 	rect.info();
 	rect.draw();
+	//TODO
+	//1. Добавить квадрат;
+	// 2. Добавить круг;
+	// 3. Добавить иерархию треугольников
+	//
 }
