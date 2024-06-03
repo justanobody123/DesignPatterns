@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <Windows.h>
 using std::cin;
 using std::cout;
@@ -22,7 +22,7 @@ namespace MyGeometry//CTRL K + S
 	};
 	class Shape
 	{
-	protected://Нарушение инкапсуляции
+	protected://РќР°СЂСѓС€РµРЅРёРµ РёРЅРєР°РїСЃСѓР»СЏС†РёРё
 		static const int MIN_SIZE = 50;
 		static const int MAX_SIZE = 800;
 		static const int MIN_LINE_WIDTH = 1;
@@ -146,20 +146,20 @@ namespace MyGeometry//CTRL K + S
 				}
 				cout << endl;
 			}*/
-			//HWND - handler to Window (Дескриптор окна нужен для того, чтобы обращаться к окну)
-			HWND hwnd = GetConsoleWindow(); //Получаем дескриптор окна консоли
+			//HWND - handler to Window (Р”РµСЃРєСЂРёРїС‚РѕСЂ РѕРєРЅР° РЅСѓР¶РµРЅ РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РѕР±СЂР°С‰Р°С‚СЊСЃСЏ Рє РѕРєРЅСѓ)
+			HWND hwnd = GetConsoleWindow(); //РџРѕР»СѓС‡Р°РµРј РґРµСЃРєСЂРёРїС‚РѕСЂ РѕРєРЅР° РєРѕРЅСЃРѕР»Рё
 			this;
-			//Для того, чтобы рисовать, нужен контекст устройства (Device context), он есть у каждого окна
+			//Р”Р»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ СЂРёСЃРѕРІР°С‚СЊ, РЅСѓР¶РµРЅ РєРѕРЅС‚РµРєСЃС‚ СѓСЃС‚СЂРѕР№СЃС‚РІР° (Device context), РѕРЅ РµСЃС‚СЊ Сѓ РєР°Р¶РґРѕРіРѕ РѕРєРЅР°
 			HDC hdc = GetDC(hwnd);
-			//hdc - это то, на чем мы будем рисовать.
-			//Теперь нужно то, чем мы будем рисовать
-			HPEN hPen = CreatePen(PS_SOLID, lineWidth, color);//Пен рисует контур фигуры
-			HBRUSH hBrush = CreateSolidBrush(color);//Кисть заливает фигуру
-			//Теперь нужно выбрать, чем и на чем мы будем рисовать
+			//hdc - СЌС‚Рѕ С‚Рѕ, РЅР° С‡РµРј РјС‹ Р±СѓРґРµРј СЂРёСЃРѕРІР°С‚СЊ.
+			//РўРµРїРµСЂСЊ РЅСѓР¶РЅРѕ С‚Рѕ, С‡РµРј РјС‹ Р±СѓРґРµРј СЂРёСЃРѕРІР°С‚СЊ
+			HPEN hPen = CreatePen(PS_SOLID, lineWidth, color);//РџРµРЅ СЂРёСЃСѓРµС‚ РєРѕРЅС‚СѓСЂ С„РёРіСѓСЂС‹
+			HBRUSH hBrush = CreateSolidBrush(color);//РљРёСЃС‚СЊ Р·Р°Р»РёРІР°РµС‚ С„РёРіСѓСЂСѓ
+			//РўРµРїРµСЂСЊ РЅСѓР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ, С‡РµРј Рё РЅР° С‡РµРј РјС‹ Р±СѓРґРµРј СЂРёСЃРѕРІР°С‚СЊ
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 			::Rectangle(hdc, x, y, x + width, y + height);
-			//Удаляем все созданные объекты для того, чтобы освободить ресурсы машины
+			//РЈРґР°Р»СЏРµРј РІСЃРµ СЃРѕР·РґР°РЅРЅС‹Рµ РѕР±СЉРµРєС‚С‹ РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РѕСЃРІРѕР±РѕРґРёС‚СЊ СЂРµСЃСѓСЂСЃС‹ РјР°С€РёРЅС‹
 			DeleteObject(hPen);
 			DeleteObject(hBrush);
 			ReleaseDC(hwnd, hdc);
@@ -168,8 +168,8 @@ namespace MyGeometry//CTRL K + S
 		void info() const override
 		{
 			cout << typeid(*this).name() << endl;
-			cout << "Ширина: " << width << endl;
-			cout << "Высота: " << height << endl;
+			cout << "РЁРёСЂРёРЅР°: " << width << endl;
+			cout << "Р’С‹СЃРѕС‚Р°: " << height << endl;
 			Shape::info();
 		}
 	};
