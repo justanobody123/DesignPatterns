@@ -48,6 +48,7 @@ namespace MyGeometry//CTRL K + S
 		{
 			return lineWidth;
 		}
+		//Минимум 50, максимум 800
 		unsigned int setSize(unsigned int size)
 		{
 			return size < MIN_SIZE ? MIN_SIZE :
@@ -230,20 +231,186 @@ namespace MyGeometry//CTRL K + S
 	class Triangle : public Shape
 	{
 		//Описать абстрактный класс
+		static const double PI;
+		double height;
+		double base;
+	public:
+		void setHeight(unsigned int height)
+		{
+			this->height = setSize(height);
+		}
+		double getHeight() const
+		{
+			return height;
+		}
+		void setBase(double base)
+		{
+			this->base = setSize(base);
+		}
+		double getBase() const
+		{
+			return base;
+		}
+		//КООРДИНАТЫ ДЛЯ ВЕРХНЕЙ ВЕРШИНЫ
+		Triangle(double base, double height, unsigned int x, unsigned int y, Color color, unsigned int lineWidth) : Shape(x, y, color, lineWidth)
+		{
+			//Конструктор будет работать именно с высотой и основанием, чтобы не было проблем с условием существования треугольника
+			setBase(base);
+			setHeight(height);	
+		}
+		double getArea() const override
+		{
+			return height * base / 2;
+		}
+		//Актуально для равностороннего и равнобедренного, требуется переопределение для разностороннего
+		virtual double getLeftSide() const
+		{
+			return sqrt(pow(base / 2, 2) + pow(height, 2));
+		}
+		//Актуально для равностороннего и равнобедренного, требуется переопределение для разностороннего
+		virtual double getRightSide() const
+		{
+			return getLeftSide();
+		}
+		double getPerimeter() const
+		{
+			return base + getLeftSide() + getRightSide();
+		}
+		double getLeftSin() const
+		{
+			return height / getLeftSide();
+		}
+		double getRightSin() const
+		{
+			return height / getRightSide();
+		}
+		double getLeftAngle() const
+		{
+			return asin(getLeftSin()) * 180 / PI;
+		}
+		double getRightAngle() const
+		{
+			return asin(getRightSin()) * 180 / PI;
+		}
+		double getTopAngle() const
+		{
+			return 180 - getLeftAngle() - getRightAngle();
+		}
+		double getLeftCos() const
+		{
+			double radians = getLeftAngle() * (PI / 180.0);
+			return cos(radians);
+		}
+		double getRightCos() const
+		{
+			double radians = getRightAngle() * (PI / 180.0);
+			return cos(radians);
+		}
+		void draw() const override
+		{
+			HWND hwnd = GetConsoleWindow();
+			HDC hdc = GetDC(hwnd);
+			HPEN pen = CreatePen(PS_SOLID, lineWidth, color);
+			HBRUSH brush = CreateSolidBrush(color);
+			SelectObject(hdc,pen);
+			SelectObject(hdc, brush);
+			POINT vertices[3] = { {x, y}, {x - getLeftSide() * getLeftCos(), y + getLeftSide() * getLeftSin()}, {x + getRightSide() * getRightCos(), y + getRightSide() * getRightSin()}};
+			::Polygon(hdc, vertices, 3);
+			DeleteObject(pen);
+			DeleteObject(brush);
+			ReleaseDC(hwnd, hdc);
+		}
+		void info() const override = 0;
 	};
+	class IsoscelesTriangle : public Triangle
+	{
+	public:
+		IsoscelesTriangle(double base, double height, unsigned int x, unsigned int y, Color color, unsigned int lineWidth) : Triangle(base, height, x, y, color, lineWidth)
+		{
+
+		}
+		void info() const override
+		{
+			cout << typeid(*this).name() << endl
+				<< "Основание и верхний угол: " << getBase() << " " << getTopAngle() << "°" << endl
+				<< "Левая сторона: " << getLeftSide() << " " << getLeftAngle() << "°" << endl
+				<< "Правая сторона: " << getRightSide() << " " << getRightAngle() << "°" << endl;
+			Shape::info();
+		}
+	};
+	//По факту, равносторонний треугольник это частный случай равнобедренного. Можно было бы унаследоваться от равнобедренного, но никакой разницы не будет. Иду напрямую, чтобы избежать цепного вызова конструкторов.
+	class EqulateralTriangle : public Triangle
+	{
+	public:
+		EqulateralTriangle(double side, unsigned int x, unsigned int y, Color color, unsigned int lineWidth) : Triangle(side, (side * sqrt(3)) / 2.0, x, y, color, lineWidth)
+		{
+
+		}
+		void info() const override
+		{
+			cout << typeid(*this).name() << endl
+				<< "Основание и верхний угол: " << getBase() << " " << getTopAngle() << "°" << endl
+				<< "Левая сторона: " << getLeftSide() << " " << getLeftAngle() << "°" << endl
+				<< "Правая сторона: " << getRightSide() << " " << getRightAngle() << "°" << endl;
+			Shape::info();
+		}
+	};
+	class ScaleneTriangle : public Triangle
+	{
+		double leftSide;
+	public:
+		ScaleneTriangle(double base, double leftSide, double height, unsigned int x, unsigned int y, Color color, unsigned int lineWidth) : Triangle(base, height, x, y, color, lineWidth)
+		{
+			setLeftSide(leftSide);
+		}
+		void setLeftSide(double left)
+		{
+			leftSide = setSize(left);
+			if (leftSide < getHeight())
+			{
+				cout << "Эта сторона не может быть меньше высоты, проведенной к основанию. leftSide исправлено на " << getHeight() << endl;
+				leftSide = getHeight();
+			}
+		}
+		double getLeftSide() const override
+		{
+			return leftSide;
+		}
+		double getRightSide() const override
+		{
+			//Ищем катет основания левого треугольника, вычитаем из основания катет, получаем оставшуюся часть. Ищем по теореме пифагора правую часть
+			double theta = sqrt(leftSide * leftSide - getHeight() * getHeight());
+			return sqrt(getHeight() * getHeight() + (getBase() - theta) * (getBase() - theta));
+		}
+		void info() const override
+		{
+			cout << typeid(*this).name() << endl
+				<< "Основание и верхний угол: " << getBase() << " " << getTopAngle() << "°" << endl
+				<< "Левая сторона: " << getLeftSide() << " " << getLeftAngle() << "°" << endl
+				<< "Правая сторона: " << getRightSide() << " " << getRightAngle() << "°" << endl;
+			Shape::info();
+		}
+	};
+	//А вот что делать с прямоугольным — я не знаю. Чаще всего это разносторонний треугольник, но бывают и равнобедренные прямоугольные треугольники.
+	//Если высота равна половине основания в равнобедренном треугольнике, то он прямоугольный. Если левая сторона равна высоте в разностороннем треугольнике, то он прямоугольный.
+	//Его можно получить в разных положениях, создавая объекты разных типов, а потому, думаю, еще один класс будет лишним.
+	const double Triangle::PI = 3.14159;
 }
 
 void main()
 {
 	setlocale(LC_ALL, "");
-	MyGeometry::Rectangle rect(100, 50, 300, 100, MyGeometry::Color::RED, 8);
-	rect.info();
 	MyGeometry::Square square(100, 420, 100, MyGeometry::Color::GREY, 8);
 	square.info();
 	MyGeometry::Circle circle(50, 540, 100, MyGeometry::Color::GREEN, 8);
 	circle.info();
-
-	//TODO:
+	MyGeometry::IsoscelesTriangle iTriangle(100, 50, 700, 100, MyGeometry::Color::BLUE, 8);
+	iTriangle.info();
+	MyGeometry::EqulateralTriangle eTriangle(100, 420, 250, MyGeometry::Color::YELLOW, 8);
+	eTriangle.info();
+	MyGeometry::ScaleneTriangle sTriangle(200, 250, 100, 600, 300, MyGeometry::Color::RED, 8);
+	sTriangle.info();
+	//DONE:
 	//	1. Добавить квадрат;
 	//	2. Добавить круг;
 	//	3. Добавить иерархию треугольников;
