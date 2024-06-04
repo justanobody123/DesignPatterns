@@ -183,7 +183,7 @@ class Circle : public Figure
 	int y;
 	void setPerimeter() override
 	{
-		perimeter = 2 + PI + radius;
+		perimeter = 2 * PI * radius;
 	}
 	void setDiameter()
 	{
