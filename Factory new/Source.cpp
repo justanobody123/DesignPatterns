@@ -410,7 +410,7 @@ void main()
 	eTriangle.info();
 	MyGeometry::ScaleneTriangle sTriangle(200, 100, 100, 600, 300, MyGeometry::Color::RED, 8);
 	sTriangle.info();
-	//DONE:
+	//DONE
 	//	1. Добавить квадрат;
 	//	2. Добавить круг;
 	//	3. Добавить иерархию треугольников;
