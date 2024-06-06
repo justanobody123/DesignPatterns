@@ -408,7 +408,7 @@ void main()
 	iTriangle.info();
 	MyGeometry::EqulateralTriangle eTriangle(100, 420, 250, MyGeometry::Color::YELLOW, 8);
 	eTriangle.info();
-	MyGeometry::ScaleneTriangle sTriangle(200, 250, 100, 600, 300, MyGeometry::Color::RED, 8);
+	MyGeometry::ScaleneTriangle sTriangle(200, 100, 100, 600, 300, MyGeometry::Color::RED, 8);
 	sTriangle.info();
 	//DONE:
 	//	1. Добавить квадрат;
