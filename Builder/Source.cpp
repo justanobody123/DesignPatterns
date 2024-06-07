@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <string>
 #include <Windows.h>
 using std::cin;
@@ -88,26 +88,26 @@ public:
 	}
 	void power_button()
 	{
-		//Ыныдуе(ЭсдыЭ)ж
+		//Р«РЅС‹РґСѓРµ(Р­СЃРґС‹Р­)Р¶
 		on = !on;
 		if (on)
 		{
-			cout << "Загрузка Windows. Пожалуйста, подождите..." << endl;
+			cout << "Р—Р°РіСЂСѓР·РєР° Windows. РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РїРѕРґРѕР¶РґРёС‚Рµ..." << endl;
 			Sleep(500);
-			cout << "Ваш рабочий стол " << endl;
+			cout << "Р’Р°С€ СЂР°Р±РѕС‡РёР№ СЃС‚РѕР» " << endl;
 			Sleep(500);
 			info();
 		}
 		else
 		{
-			cout << "Завершение работы системы" << endl;
+			cout << "Р—Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹ СЃРёСЃС‚РµРјС‹" << endl;
 			Sleep(500);
-			cout << "Не забудьте выдернуть меня из розетки" << endl;
+			cout << "РќРµ Р·Р°Р±СѓРґСЊС‚Рµ РІС‹РґРµСЂРЅСѓС‚СЊ РјРµРЅСЏ РёР· СЂРѕР·РµС‚РєРё" << endl;
 		}
 	}
 	void info() const
 	{
-		cout << "Свойства системы:" << endl <<
+		cout << "РЎРІРѕР№СЃС‚РІР° СЃРёСЃС‚РµРјС‹:" << endl <<
 			type << endl <<
 			mb << endl <<
 			cpu << endl <<
@@ -152,7 +152,7 @@ class OfficeComputerBuilder : public ComputerBuilder
 public:
 	void set_type() override
 	{
-		computer->set_type("Офисный компьютер");
+		computer->set_type("РћС„РёСЃРЅС‹Р№ РєРѕРјРїСЊСЋС‚РµСЂ");
 	}
 	void set_mb() override
 	{
@@ -192,7 +192,7 @@ class DeveloperComputerBuilder : public ComputerBuilder
 public:
 	void set_type() override
 	{
-		computer->set_type("Компьютер разработчика");
+		computer->set_type("РљРѕРјРїСЊСЋС‚РµСЂ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєР°");
 	}
 	void set_mb() override
 	{
@@ -256,7 +256,7 @@ public:
 		}
 		else
 		{
-			cout << "Средства на сборку компьютера не были выделены" << endl;
+			cout << "РЎСЂРµРґСЃС‚РІР° РЅР° СЃР±РѕСЂРєСѓ РєРѕРјРїСЊСЋС‚РµСЂР° РЅРµ Р±С‹Р»Рё РІС‹РґРµР»РµРЅС‹" << endl;
 		}
 		cout << delimeter;
 		
@@ -269,7 +269,7 @@ void main()
 	setlocale(LC_ALL, "");
 #ifdef PROBLEM
 	Computer cheap_computer(
-		"Бюджетный компьютер",
+		"Р‘СЋРґР¶РµС‚РЅС‹Р№ РєРѕРјРїСЊСЋС‚РµСЂ",
 		"MSI H610 MicroATX",
 		"Intel Celeron G6900",
 		"Silicon power 8 GB DDR-4",
@@ -283,7 +283,7 @@ void main()
 	cout << delimeter;
 	Computer game_dev
 	(
-		"Компьютер разработчика",
+		"РљРѕРјРїСЊСЋС‚РµСЂ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєР°",
 		"ASUS ROG MAXIMUS Z790 DARK HERO",
 		"Intel Core i9-12900K BOX",
 		"Corsair Dominator 64 GB DDR-5",
