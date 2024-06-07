@@ -1,4 +1,4 @@
-#define _USE_MATH_DEFINES
+п»ї#define _USE_MATH_DEFINES
 #include<Windows.h>
 #include<iostream>
 #include<ctime>
@@ -89,26 +89,26 @@ namespace MyGeometry
 		virtual double get_perimeter()const = 0;
 		void draw() const 
 		{
-			//HWND - Handler to Window (Дескриптор окна, нужен для того чтобы обращаться в ону)
-			HWND hwnd = GetConsoleWindow();	//Получаем дескриптор окна консоли.
-			//HWND hwnd = GetDesktopWindow();	//Получаем дескриптор окна консоли.
+			//HWND - Handler to Window (Р”РµСЃРєСЂРёРїС‚РѕСЂ РѕРєРЅР°, РЅСѓР¶РµРЅ РґР»СЏ С‚РѕРіРѕ С‡С‚РѕР±С‹ РѕР±СЂР°С‰Р°С‚СЊСЃСЏ РІ РѕРЅСѓ)
+			HWND hwnd = GetConsoleWindow();	//РџРѕР»СѓС‡Р°РµРј РґРµСЃРєСЂРёРїС‚РѕСЂ РѕРєРЅР° РєРѕРЅСЃРѕР»Рё.
+			//HWND hwnd = GetDesktopWindow();	//РџРѕР»СѓС‡Р°РµРј РґРµСЃРєСЂРёРїС‚РѕСЂ РѕРєРЅР° РєРѕРЅСЃРѕР»Рё.
 
-			//Для того чтобы рисовать, нужен контекст устройства (Device Context), он есть каждого окна
+			//Р”Р»СЏ С‚РѕРіРѕ С‡С‚РѕР±С‹ СЂРёСЃРѕРІР°С‚СЊ, РЅСѓР¶РµРЅ РєРѕРЅС‚РµРєСЃС‚ СѓСЃС‚СЂРѕР№СЃС‚РІР° (Device Context), РѕРЅ РµСЃС‚СЊ РєР°Р¶РґРѕРіРѕ РѕРєРЅР°
 			HDC hdc = GetDC(hwnd);
-			//hdc - это то, на чем мы будем рисовать.
+			//hdc - СЌС‚Рѕ С‚Рѕ, РЅР° С‡РµРј РјС‹ Р±СѓРґРµРј СЂРёСЃРѕРІР°С‚СЊ.
 
-			//Теперь нужно то, чем мы будем рисовать:
+			//РўРµРїРµСЂСЊ РЅСѓР¶РЅРѕ С‚Рѕ, С‡РµРј РјС‹ Р±СѓРґРµРј СЂРёСЃРѕРІР°С‚СЊ:
 
-			HPEN hPen = CreatePen(PS_SOLID, line_width, color);	//Карандаш рисует контур фигуры
-			HBRUSH hBrush = CreateSolidBrush(color);	//Кисть заливает фигуру
+			HPEN hPen = CreatePen(PS_SOLID, line_width, color);	//РљР°СЂР°РЅРґР°С€ СЂРёСЃСѓРµС‚ РєРѕРЅС‚СѓСЂ С„РёРіСѓСЂС‹
+			HBRUSH hBrush = CreateSolidBrush(color);	//РљРёСЃС‚СЊ Р·Р°Р»РёРІР°РµС‚ С„РёРіСѓСЂСѓ
 
-			//Теперь нужно выбрать чем и на чем будем рисовать:
+			//РўРµРїРµСЂСЊ РЅСѓР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ С‡РµРј Рё РЅР° С‡РµРј Р±СѓРґРµРј СЂРёСЃРѕРІР°С‚СЊ:
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
-			//Тут вызываем оверрайд метод
+			//РўСѓС‚ РІС‹Р·С‹РІР°РµРј РѕРІРµСЂСЂР°Р№Рґ РјРµС‚РѕРґ
 			drawShape(hdc);
 
-			//Удаляем все созданные объекты для того чтобы освободить ресурсы:
+			//РЈРґР°Р»СЏРµРј РІСЃРµ СЃРѕР·РґР°РЅРЅС‹Рµ РѕР±СЉРµРєС‚С‹ РґР»СЏ С‚РѕРіРѕ С‡С‚РѕР±С‹ РѕСЃРІРѕР±РѕРґРёС‚СЊ СЂРµСЃСѓСЂСЃС‹:
 
 			DeleteObject(hPen);
 			DeleteObject(hBrush);
@@ -118,8 +118,8 @@ namespace MyGeometry
 		virtual void drawShape(HDC& hdc) const = 0;
 		virtual void info()const
 		{
-			cout << "Площадь фигуры: " << get_area() << endl;
-			cout << "Периметр фигуры: " << get_perimeter() << endl;
+			cout << "РџР»РѕС‰Р°РґСЊ С„РёРіСѓСЂС‹: " << get_area() << endl;
+			cout << "РџРµСЂРёРјРµС‚СЂ С„РёРіСѓСЂС‹: " << get_perimeter() << endl;
 			draw();
 		}
 	};
@@ -169,8 +169,8 @@ namespace MyGeometry
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
-			cout << "Ширина: " << width << endl;
-			cout << "Высота: " << height << endl;
+			cout << "РЁРёСЂРёРЅР°: " << width << endl;
+			cout << "Р’С‹СЃРѕС‚Р°: " << height << endl;
 			Shape::info();
 		}
 	};
@@ -219,12 +219,12 @@ namespace MyGeometry
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
-			cout << "Радиус: " << get_radius() << endl;
-			cout << "Диаметр: " << get_diameter() << endl;
+			cout << "Р Р°РґРёСѓСЃ: " << get_radius() << endl;
+			cout << "Р”РёР°РјРµС‚СЂ: " << get_diameter() << endl;
 			Shape::info();
 		}
 	};
-	//Пришлось вынести енам в подпространство имен, чтобы избежать конфликтов имен
+	//РџСЂРёС€Р»РѕСЃСЊ РІС‹РЅРµСЃС‚Рё РµРЅР°Рј РІ РїРѕРґРїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ РёРјРµРЅ, С‡С‚РѕР±С‹ РёР·Р±РµР¶Р°С‚СЊ РєРѕРЅС„Р»РёРєС‚РѕРІ РёРјРµРЅ
 	namespace ShapeTypes
 	{
 		enum Shapes
@@ -265,10 +265,10 @@ void main()
 	setlocale(LC_ALL, "");
 #ifdef USING_ENUM_COLOR
 	MyGeometry::Rectangle rect(100, 50, 350, 100, 8, MyGeometry::Color::RED);
-	/*cout << "Ширина прямоугольника: " << rect.get_width() << endl;
-	cout << "Высота прямоугольника: " << rect.get_height() << endl;
-	cout << "Площадь прямоугольника: " << rect.get_area() << endl;
-	cout << "Периметр прямоугольника: " << rect.get_perimeter() << endl;
+	/*cout << "РЁРёСЂРёРЅР° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°: " << rect.get_width() << endl;
+	cout << "Р’С‹СЃРѕС‚Р° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°: " << rect.get_height() << endl;
+	cout << "РџР»РѕС‰Р°РґСЊ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°: " << rect.get_area() << endl;
+	cout << "РџРµСЂРёРјРµС‚СЂ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°: " << rect.get_perimeter() << endl;
 	rect.draw();*/
 	rect.info();
 
@@ -281,10 +281,10 @@ void main()
 
 #ifdef USING_COLORREF
 	MyGeometry::Rectangle rect(100, 50, 350, 100, 8, RGB(255, 0, 0));
-	/*cout << "Ширина прямоугольника: " << rect.get_width() << endl;
-	cout << "Высота прямоугольника: " << rect.get_height() << endl;
-	cout << "Площадь прямоугольника: " << rect.get_area() << endl;
-	cout << "Периметр прямоугольника: " << rect.get_perimeter() << endl;
+	/*cout << "РЁРёСЂРёРЅР° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°: " << rect.get_width() << endl;
+	cout << "Р’С‹СЃРѕС‚Р° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°: " << rect.get_height() << endl;
+	cout << "РџР»РѕС‰Р°РґСЊ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°: " << rect.get_area() << endl;
+	cout << "РџРµСЂРёРјРµС‚СЂ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°: " << rect.get_perimeter() << endl;
 	rect.draw();*/
 	rect.info();
 
@@ -309,9 +309,9 @@ void main()
 		Sleep(500);
 	}
 	for (int i = 0; i < n; i++)delete[] shape[i];
-	//Сделала енам, который позволяет управлять фабрикой без магических чисел. Если надо рандомно генерировать объект, то просто приведем инт к енаму с помощью статик каста
-	MyGeometry::Shape* pointer = MyGeometry::ShapeFactory::createShape(MyGeometry::ShapeTypes::Rectangle);
+	//РЎРґРµР»Р°Р»Р° РµРЅР°Рј, РєРѕС‚РѕСЂС‹Р№ РїРѕР·РІРѕР»СЏРµС‚ СѓРїСЂР°РІР»СЏС‚СЊ С„Р°Р±СЂРёРєРѕР№ Р±РµР· РјР°РіРёС‡РµСЃРєРёС… С‡РёСЃРµР». Р•СЃР»Рё РЅР°РґРѕ СЂР°РЅРґРѕРјРЅРѕ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РѕР±СЉРµРєС‚, С‚Рѕ РїСЂРѕСЃС‚Рѕ РїСЂРёРІРµРґРµРј РёРЅС‚ Рє РµРЅР°РјСѓ СЃ РїРѕРјРѕС‰СЊСЋ СЃС‚Р°С‚РёРє РєР°СЃС‚Р°
+	MyGeometry::Shape* pointer = MyGeometry::ShapeFactory::createShape(MyGeometry::ShapeTypes::Circle);
 	pointer->draw();
-	//Да, оно работает
+	//Р”Р°, РѕРЅРѕ СЂР°Р±РѕС‚Р°РµС‚
 	delete[] pointer;
 }
