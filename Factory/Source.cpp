@@ -14,14 +14,72 @@ using namespace std;
 
 namespace MyGeometry
 {
-	enum Color
+	/*enum Color
 	{
 		RED = 0x000000FF,
 		GREEN = 0x0000FF00,
 		BLUE = 0x00FF0000,
 		GREY = 0x00AAAAAA,
 		YELLOW = 0x0000FFFF
-	};
+	};*/
+	/*class Color
+	{
+
+		int red;
+		int green;
+		int blue;
+	public:
+		static const int MIN_COLOR = 0;
+		static const int MAX_COLOR = 255;
+		int check_color(int value)
+		{
+			return value < MIN_COLOR ? MIN_COLOR : value > MAX_COLOR ? MAX_COLOR : value;
+		}
+		void set_red(int value)
+		{
+			red = check_color(value);
+		}
+		int get_red() const
+		{
+			return red;
+		}
+		int get_green() const
+		{
+			return green;
+		}
+		int get_blue() const
+		{
+			return blue;
+		}
+		void set_green(int value)
+		{
+			green = check_color(value);
+		}
+		void set_blue(int value)
+		{
+			blue = check_color(value);
+		}
+		void set_color(int red, int green, int blue)
+		{
+			set_red(red);
+			set_blue(blue);
+			set_green(green);
+		}
+		Color()
+		{
+			red = 0;
+			green = 0;
+			blue = 0;
+		}
+		Color(int red, int green, int blue)
+		{
+			set_color(red, green, blue);
+		}
+		~Color()
+		{
+
+		}
+	};*/
 #define SHAPE_TAKE_PARAMETERS unsigned int x, unsigned int y, unsigned int line_width, COLORREF color
 #define SHAPE_GIVE_PARAMETERS x, y, line_width, color
 	class Shape
@@ -60,6 +118,11 @@ namespace MyGeometry
 				size > MAX_SIZE ? MAX_SIZE :
 				size;
 		}
+		void set_color(COLORREF color)
+		{
+			this->color = color;
+		}
+
 		void set_x(unsigned int x)
 		{
 			this->x = x < MAX_HORIZONTAL_RESOLUTION ? x : MAX_HORIZONTAL_RESOLUTION;
@@ -76,6 +139,7 @@ namespace MyGeometry
 		}
 
 		//				Constructors:
+
 		Shape(SHAPE_TAKE_PARAMETERS) :color(color)
 		{
 			set_x(x);
@@ -87,7 +151,7 @@ namespace MyGeometry
 		//				Methods:
 		virtual double get_area()const = 0;
 		virtual double get_perimeter()const = 0;
-		void draw() const 
+		void draw() const
 		{
 			//HWND - Handler to Window (Дескриптор окна, нужен для того чтобы обращаться в ону)
 			HWND hwnd = GetConsoleWindow();	//Получаем дескриптор окна консоли.
@@ -195,7 +259,7 @@ namespace MyGeometry
 		}
 		double get_area()const override
 		{
-			return M_PI * radius*radius;
+			return M_PI * radius * radius;
 		}
 		double get_perimeter()const override
 		{
@@ -224,12 +288,170 @@ namespace MyGeometry
 			Shape::info();
 		}
 	};
+	class Triangle : public Shape
+	{
+		//Описать абстрактный класс
+		static const double PI;
+		double height;
+		double base;
+	public:
+		void setHeight(unsigned int height)
+		{
+			this->height = set_size(height);
+		}
+		double getHeight() const
+		{
+			return height;
+		}
+		void setBase(double base)
+		{
+			this->base = set_size(base);
+		}
+		double getBase() const
+		{
+			return base;
+		}
+		//КООРДИНАТЫ ДЛЯ ВЕРХНЕЙ ВЕРШИНЫ
+		Triangle(double base, double height, SHAPE_TAKE_PARAMETERS) : Shape(SHAPE_GIVE_PARAMETERS)
+		{
+			//Конструктор будет работать именно с высотой и основанием, чтобы не было проблем с условием существования треугольника
+			setBase(base);
+			setHeight(height);
+		}
+		double get_area() const override
+		{
+			return height * base / 2;
+		}
+		//Актуально для равностороннего и равнобедренного, требуется переопределение для разностороннего
+		virtual double getLeftSide() const
+		{
+			return sqrt(pow(base / 2, 2) + pow(height, 2));
+		}
+		//Актуально для равностороннего и равнобедренного, требуется переопределение для разностороннего
+		virtual double getRightSide() const
+		{
+			return getLeftSide();
+		}
+		double get_perimeter() const
+		{
+			return base + getLeftSide() + getRightSide();
+		}
+		double getLeftSin() const
+		{
+			return height / getLeftSide();
+		}
+		double getRightSin() const
+		{
+			return height / getRightSide();
+		}
+		double getLeftAngle() const
+		{
+			return asin(getLeftSin()) * 180 / PI;
+		}
+		double getRightAngle() const
+		{
+			return asin(getRightSin()) * 180 / PI;
+		}
+		double getTopAngle() const
+		{
+			return 180 - getLeftAngle() - getRightAngle();
+		}
+		double getLeftCos() const
+		{
+			double radians = getLeftAngle() * (PI / 180.0);
+			return cos(radians);
+		}
+		double getRightCos() const
+		{
+			double radians = getRightAngle() * (PI / 180.0);
+			return cos(radians);
+		}
+		void drawShape(HDC& hdc) const override
+		{
+			POINT vertices[3] = { {x, y}, {x - getLeftSide() * getLeftCos(), y + getLeftSide() * getLeftSin()}, {x + getRightSide() * getRightCos(), y + getRightSide() * getRightSin()} };
+			::Polygon(hdc, vertices, 3);
+		}
+		void info() const override = 0;
+	};
+	class IsoscelesTriangle : public Triangle
+	{
+	public:
+		IsoscelesTriangle(double base, double height, SHAPE_TAKE_PARAMETERS) : Triangle(base, height, SHAPE_GIVE_PARAMETERS)
+		{
+
+		}
+		void info() const override
+		{
+			cout << typeid(*this).name() << endl
+				<< "Основание и верхний угол: " << getBase() << " " << getTopAngle() << "°" << endl
+				<< "Левая сторона: " << getLeftSide() << " " << getLeftAngle() << "°" << endl
+				<< "Правая сторона: " << getRightSide() << " " << getRightAngle() << "°" << endl;
+			Shape::info();
+		}
+	};
+	//По факту, равносторонний треугольник это частный случай равнобедренного. Можно было бы унаследоваться от равнобедренного, но никакой разницы не будет. Иду напрямую, чтобы избежать цепного вызова конструкторов.
+	class EquilateralTriangle : public Triangle
+	{
+	public:
+		EquilateralTriangle(double side, SHAPE_TAKE_PARAMETERS) : Triangle(side, (side * sqrt(3)) / 2.0, SHAPE_GIVE_PARAMETERS)
+		{
+
+		}
+		void info() const override
+		{
+			cout << typeid(*this).name() << endl
+				<< "Основание и верхний угол: " << getBase() << " " << getTopAngle() << "°" << endl
+				<< "Левая сторона: " << getLeftSide() << " " << getLeftAngle() << "°" << endl
+				<< "Правая сторона: " << getRightSide() << " " << getRightAngle() << "°" << endl;
+			Shape::info();
+		}
+	};
+	class ScaleneTriangle : public Triangle
+	{
+		double leftSide;
+	public:
+		ScaleneTriangle(double base, double leftSide, double height, SHAPE_TAKE_PARAMETERS) : Triangle(base, height, SHAPE_GIVE_PARAMETERS)
+		{
+			setLeftSide(leftSide);
+		}
+		void setLeftSide(double left)
+		{
+			leftSide = set_size(left);
+			if (leftSide < getHeight())
+			{
+				cout << "Эта сторона не может быть меньше высоты, проведенной к основанию. leftSide исправлено на " << getHeight() << endl;
+				leftSide = getHeight();
+			}
+		}
+		double getLeftSide() const override
+		{
+			return leftSide;
+		}
+		double getRightSide() const override
+		{
+			//Ищем катет основания левого треугольника, вычитаем из основания катет, получаем оставшуюся часть. Ищем по теореме пифагора правую часть
+			double theta = sqrt(leftSide * leftSide - getHeight() * getHeight());
+			return sqrt(getHeight() * getHeight() + (getBase() - theta) * (getBase() - theta));
+		}
+		void info() const override
+		{
+			cout << typeid(*this).name() << endl
+				<< "Основание и верхний угол: " << getBase() << " " << getTopAngle() << "°" << endl
+				<< "Левая сторона: " << getLeftSide() << " " << getLeftAngle() << "°" << endl
+				<< "Правая сторона: " << getRightSide() << " " << getRightAngle() << "°" << endl;
+			Shape::info();
+		}
+	};
+	//А вот что делать с прямоугольным — я не знаю. Чаще всего это разносторонний треугольник, но бывают и равнобедренные прямоугольные треугольники.
+	//Если высота равна половине основания в равнобедренном треугольнике, то он прямоугольный. Если левая или правая сторона равна высоте в разностороннем треугольнике, то он прямоугольный.
+	//Его можно получить в разных положениях, создавая объекты разных типов, а потому, думаю, еще один класс будет лишним.
+	const double Triangle::PI = 3.14159;
 	//Пришлось вынести енам в подпространство имен, чтобы избежать конфликтов имен
 	namespace ShapeTypes
 	{
 		enum Shapes
 		{
-			Rectangle, Square, Circle
+			Rectangle, Square, Circle, IsoscelesTriangle, EqulateralTriangle, ScaleneTriangle
 		};
 	};
 	class ShapeFactory {
@@ -240,21 +462,43 @@ namespace MyGeometry
 #define SHAPE_PARAMETERS rand() % Shape::MAX_HORIZONTAL_RESOLUTION, rand() % Shape::MAX_VERTICAL_RESOLUTION,rand() % Shape::MAX_LINE_WIDTH,RGB(rand(), rand(), rand())
 			switch (type)
 			{
-			case 0:	shape = new Rectangle
-				  (
-					  rand() % Shape::MAX_SIZE, rand() % Shape::MAX_SIZE,
-					  rand() % Shape::MAX_HORIZONTAL_RESOLUTION, rand() % Shape::MAX_VERTICAL_RESOLUTION,
-					  rand() % Shape::MAX_LINE_WIDTH,
-					  RGB(rand(), rand(), rand())
-				  );
-				break;
+			case 0:	shape = new Rectangle(rand() % Shape::MAX_SIZE, rand() % Shape::MAX_SIZE, SHAPE_PARAMETERS); break;
 			case 1: shape = new Square(rand() % Shape::MAX_SIZE, SHAPE_PARAMETERS); break;
 			case 2: shape = new Circle(rand() % Shape::MAX_SIZE, SHAPE_PARAMETERS); break;
+			case 3: shape = new IsoscelesTriangle(rand() % Shape::MAX_SIZE, rand() % Shape::MAX_SIZE, SHAPE_PARAMETERS); break;
+			case 4: shape = new EquilateralTriangle(rand() % Shape::MAX_SIZE, SHAPE_PARAMETERS); break;
+			case 5: shape = new ScaleneTriangle(rand() % Shape::MAX_SIZE, rand() % Shape::MAX_SIZE, rand() % Shape::MAX_SIZE, SHAPE_PARAMETERS); break;
 			}
 			return shape;
 		}
 	};
-	
+	class ShapeBuilder
+	{
+	public:
+		ShapeBuilder() {}
+		Circle* build_circle() {
+			return new Circle(100, 400, 400, 8, RGB(255, 255, 255));
+		}
+		Square* build_square() {
+			return new Square(100, 400, 400, 8, RGB(255, 255, 255));
+		}
+		Rectangle* build_rectangle() {
+			return new Rectangle(150, 75, 400, 400, 8, RGB(255, 255, 255));
+		}
+		IsoscelesTriangle* build_isosceles_triangle() {
+			return new IsoscelesTriangle(80, 100, 400, 400, 8, RGB(255, 255, 255));
+		}
+		EquilateralTriangle* build_equilateral_triangle() {
+			return new EquilateralTriangle(100, 400, 400, 8, RGB(255, 255, 255));
+		}
+		ScaleneTriangle* build_scalene_triangle() {
+			return new ScaleneTriangle(80, 120, 60, 400, 400, 8, RGB(255, 255, 255));
+		}
+		ScaleneTriangle* build_right_triangle()
+		{
+			return new ScaleneTriangle(60, 100, 100, 400, 400, 8, RGB(255, 255, 255));
+		}
+	};
 }
 
 //#define USING_ENUM_COLOR
@@ -298,9 +542,9 @@ void main()
 	srand(time(NULL));
 	const int n = 15;
 	MyGeometry::Shape* shape[n]{};
-	for (int i = 0; i < n; i++)
+	/*for (int i = 0; i < n; i++)
 	{
-		shape[i] = MyGeometry::ShapeFactory::createShape(static_cast<MyGeometry::ShapeTypes::Shapes>(rand() % 3));
+		shape[i] = MyGeometry::ShapeFactory::createShape(static_cast<MyGeometry::ShapeTypes::Shapes>(rand() % 6));
 	}
 
 	for (int i = 0; i < n; i++)
@@ -308,10 +552,12 @@ void main()
 		shape[i]->draw();
 		Sleep(500);
 	}
-	for (int i = 0; i < n; i++)delete[] shape[i];
+	for (int i = 0; i < n; i++)delete[] shape[i];*/
 	//Сделала енам, который позволяет управлять фабрикой без магических чисел. Если надо рандомно генерировать объект, то просто приведем инт к енаму с помощью статик каста
-	MyGeometry::Shape* pointer = MyGeometry::ShapeFactory::createShape(MyGeometry::ShapeTypes::Circle);
-	pointer->draw();
-	//Да, оно работает
-	delete[] pointer;
+	// 
+	//Билдер
+	MyGeometry::ShapeBuilder builder;
+	MyGeometry::Shape* pointer = builder.build_isosceles_triangle();
+	pointer->info();
+	delete pointer;
 }
