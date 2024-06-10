@@ -10,7 +10,7 @@ using std::endl;
 class Player
 {
 public:
-	virtual Player* clone() const = 0;
+	virtual std::unique_ptr<Player> clone() const = 0;
 	/*Player(const std::string& name, int id) : name(name), id(id)
 	{
 
@@ -38,10 +38,11 @@ public:
 	{
 		cout << this << ":\t" << name << " " << id << endl;
 	}
-	Player* clone() const override
+	std::unique_ptr<Player>clone() const override
 	{
-		return new CarPlayer(*this);
+		return std::make_unique<CarPlayer>(*this);
 	}
+
 };
 class BikePlayer : public Player
 {
@@ -60,9 +61,9 @@ public:
 	{
 		cout << this << ":\t" << name << " " << id << endl;
 	}
-	Player* clone() const override
+	std::unique_ptr<Player> clone() const override
 	{
-		return new BikePlayer(*this);
+		return std::make_unique<BikePlayer>(*this);
 	}
 };
 enum PlayerType
@@ -83,7 +84,7 @@ public:
 		delete players[CAR];
 		delete players[BIKE];
 	}
-	Player* createPlayer(PlayerType type)
+	std::unique_ptr<Player> createPlayer(PlayerType type)
 	{
 		return players[type]->clone();
 	}
@@ -105,14 +106,14 @@ void main()
 #endif // PROBLEM
 	PlayerFactory factory;
 	cout << delimeter;
-	Player* car_player = factory.createPlayer(CAR);
+	std::unique_ptr<Player> car_player = factory.createPlayer(CAR);
 	car_player->print();
 
 	cout << delimeter;
-	Player* bike_player = factory.createPlayer(BIKE);
+	std::unique_ptr<Player> bike_player = factory.createPlayer(BIKE);
 	bike_player->print();
 	cout << delimeter;
-	delete bike_player;
+	/*delete bike_player;
 	delete car_player;
-	cout << delimeter;
+	cout << delimeter;*/
 }
