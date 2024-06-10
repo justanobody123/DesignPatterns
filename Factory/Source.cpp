@@ -14,16 +14,115 @@ using namespace std;
 
 namespace MyGeometry
 {
-	enum Color
+	/*enum Color
 	{
 		RED = 0x000000FF,
 		GREEN = 0x0000FF00,
 		BLUE = 0x00FF0000,
 		GREY = 0x00AAAAAA,
 		YELLOW = 0x0000FFFF
-	};
+	};*/
 #define SHAPE_TAKE_PARAMETERS unsigned int x, unsigned int y, unsigned int line_width, COLORREF color
 #define SHAPE_GIVE_PARAMETERS x, y, line_width, color
+	class Color
+	{
+	protected:
+		int red;
+		int green;
+		int blue;
+
+	public:
+
+		int get_red() const
+		{
+			return red;
+		}
+		int get_green() const
+		{
+			return green;
+		}
+		int get_blue() const
+		{
+			return blue;
+		}
+
+		Color(int red, int green, int blue) : red(red), green(green), blue(blue)
+		{
+
+		}
+		void print() const
+		{
+			cout << "Color (R: " << red << ", G: " << green << ", B: " << blue << ")" << endl;
+		}
+		COLORREF to_COLORREF() const
+		{
+			return RGB(red, green, blue);
+		}
+	};
+	class Red : public Color
+	{
+	public:
+		Red() : Color(255, 0, 0)
+		{
+
+		}
+	};
+	class Blue : public Color
+	{
+	public:
+		Blue() : Color(0, 0, 255)
+		{
+
+		}
+	};
+	class Green : public Color
+	{
+	public:
+		Green() : Color(0, 255, 0)
+		{
+
+		}
+	};
+	class White : public Color
+	{
+	public:
+		White() : Color(255, 255, 255)
+		{
+
+		}
+	};
+	class Yellow : public Color
+	{
+	public:
+		Yellow() : Color(255, 255, 0)
+		{
+
+		}
+	};
+	class Grey : public Color
+	{
+	public:
+		Grey() : Color(128, 128, 128)
+		{
+
+		}
+	};
+	class Purple : public Color
+	{
+	public:
+		Purple() : Color(255, 0, 255)
+		{
+
+		}
+	};
+	class Cyan : public Color
+	{
+	public:
+		Cyan() : Color(0, 255, 255)
+		{
+
+		}
+	};
 	class Shape
 	{
 	protected:
@@ -87,7 +186,7 @@ namespace MyGeometry
 		//				Methods:
 		virtual double get_area()const = 0;
 		virtual double get_perimeter()const = 0;
-		void draw() const 
+		void draw() const
 		{
 			//HWND - Handler to Window (Дескриптор окна, нужен для того чтобы обращаться в ону)
 			HWND hwnd = GetConsoleWindow();	//Получаем дескриптор окна консоли.
@@ -195,7 +294,7 @@ namespace MyGeometry
 		}
 		double get_area()const override
 		{
-			return M_PI * radius*radius;
+			return M_PI * radius * radius;
 		}
 		double get_perimeter()const override
 		{
@@ -254,7 +353,7 @@ namespace MyGeometry
 			return shape;
 		}
 	};
-	
+
 }
 
 //#define USING_ENUM_COLOR
@@ -296,7 +395,7 @@ void main()
 #endif // USING_COLORREF
 
 	srand(time(NULL));
-	const int n = 15;
+	/*const int n = 15;
 	MyGeometry::Shape* shape[n]{};
 	for (int i = 0; i < n; i++)
 	{
@@ -308,10 +407,13 @@ void main()
 		shape[i]->draw();
 		Sleep(500);
 	}
-	for (int i = 0; i < n; i++)delete[] shape[i];
+	for (int i = 0; i < n; i++)delete[] shape[i];*/
 	//Сделала енам, который позволяет управлять фабрикой без магических чисел. Если надо рандомно генерировать объект, то просто приведем инт к енаму с помощью статик каста
-	MyGeometry::Shape* pointer = MyGeometry::ShapeFactory::createShape(MyGeometry::ShapeTypes::Circle);
-	pointer->draw();
-	//Да, оно работает
-	delete[] pointer;
+	//MyGeometry::Shape* pointer = MyGeometry::ShapeFactory::createShape(MyGeometry::ShapeTypes::Circle);
+	//pointer->draw();
+	////Да, оно работает
+	//delete[] pointer;
+	MyGeometry::Cyan color;
+	MyGeometry::Rectangle rect(50, 50, 100, 100, 8, color.to_COLORREF());
+	rect.draw();
 }
