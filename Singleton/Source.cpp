@@ -16,6 +16,7 @@ class Human
 	{
 		cout << "Ctor Human:\t" << this << endl;
 	}
+	Human(const Human& obj) = delete;
 public:
 	const std::string& getLastName() const
 	{
@@ -50,13 +51,13 @@ public:
 	{
 		cout << "Dtor Human:\t" << this << endl;
 	}
-	static Human& getInstance()
+	static Human* getInstance()
 	{
 		if (instance == nullptr)//ќбъект создаетс€ только в том случае, если он еще не существует.
 		{
 			instance = new Human(); 
 		}
-		return *instance;
+		return instance;
 	}
 	void print() const
 	{
@@ -75,9 +76,14 @@ Human* Human::instance = nullptr;//√лобальна€ точка доступа к объекту класса
 void main()
 {
 	setlocale(LC_ALL, "");
-	Human main = Human::getInstance();//—оздаем экземпл€р класса, потому что он еще не существует
-	main.setLastName("Vercetti");
-	main.setFirstName("Tommy");
-	main.setBirthDate(1951, 6, 10);
-	main.print();
+	Human* main = Human::getInstance();//—оздаем экземпл€р класса, потому что он еще не существует
+	main->setLastName("Vercetti");
+	main->setFirstName("Tommy");
+	main->setBirthDate(1951, 6, 10);
+	main->print();
+
+	/*Human copy = main;
+	///*copy.print();*/
+	//Human* tommy = Human::getInstance();
+	//tommy->setLastName*/
 }
