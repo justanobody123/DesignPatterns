@@ -58,6 +58,10 @@ namespace MyGeometry
 		{
 			return RGB(red, green, blue);
 		}
+		operator COLORREF()const
+		{
+			return RGB(red, green, blue);
+		}
 	};
 	class Red : public Color
 	{
@@ -414,6 +418,6 @@ void main()
 	////Да, оно работает
 	//delete[] pointer;
 	MyGeometry::Cyan color;
-	MyGeometry::Rectangle rect(50, 50, 100, 100, 8, color.to_COLORREF());
+	MyGeometry::Rectangle rect(50, 50, 100, 100, 8, color);
 	rect.draw();
 }
