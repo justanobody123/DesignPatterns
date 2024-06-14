@@ -72,12 +72,18 @@ enum PlayerType
 };
 class PlayerFactory
 {
-	static std::map<PlayerType, std::unique_ptr<Player>> players;// = { {new CarPlayer("BMW", 735)}, {new BikePlayer("Harley Davidson", 200)}};
-
+	static std::map<PlayerType, std::unique_ptr<Player>> players;
 	static void init()
 	{
-		if(players.find(CAR) == players.end())players[CAR] = std::make_unique<CarPlayer>(CarPlayer("BMW", 735));
-		if (players.find(BIKE) == players.end())players[BIKE] = std::make_unique <BikePlayer>(("Harley Davidson", 200));
+		static bool isInitialized = false;
+		if (!isInitialized)
+		{
+			/*cout << "Инициализируем мап:\n";*/
+			players[CAR] = std::make_unique<CarPlayer>("BMW", 735);
+			players[BIKE] = std::make_unique<BikePlayer>("Harley Davidson", 200);
+			isInitialized = true;
+			/*cout << "Инициализация закончена\n"; */
+		}
 	}
 public:
 	static std::unique_ptr<Player> createPlayer(PlayerType type)
@@ -91,7 +97,7 @@ public:
 		delete players[BIKE];
 	}*/
 };
-
+std::map<PlayerType, std::unique_ptr<Player>> PlayerFactory::players;
 //#define PROBLEM
 //#define SOLUTION_1
 #define SOLUTION_2
